@@ -3,7 +3,6 @@
 <head>
 <style type="text/css">
  .topcorner{
-   position:absolute;
    top:100;
    right:0;
   }
@@ -15,7 +14,7 @@
 <div style="float:left">
 	<form action ="pgm8.php" method="post">
 		<table>
-			<tr><td>emp_no</td><td><input type="text" name="emp_no"/><br><br></td></tr>
+			<tr><td>emp_no:</td><td><input type="text" name="emp_no"/><br><br></td></tr>
 			<tr><td>dept_no:</td><td><input type="text" name="dept_no"/><br><br></td></tr>
 			<tr><td>from_date:</td><td><input type="text" name="from_date"/><br><br></td></tr>
 			<tr><td>to_date:</td><td><input type="text" name="to_date"/><br><br></td></tr>
@@ -171,7 +170,7 @@ echo " record added";
 
 
 $sql6="insert into employees(emp_no,hire_date,birth_date,first_name,last_name,gender)values('$emp_no','$hire_date','$birth_date','$first_name','$last_name','$gender')";
-//$sql6="insert into employees(emp_no,hire_date,birth_date,first_name,last_name,gender)values('12','2016-09-17','1994-09-17','manasa','shetty','female')";
+
  if(!mysqli_query($con,$sql6))
 {
 //echo("error description: ".mysqli_error($con));
@@ -183,25 +182,103 @@ echo " record added";
 }  
 
 ?>
+
+
 <div class="topcorner">
+<form action="pgm8.php" method="POST">
+<table border="4" bordercolor="pink">   
+<tr><th>formGender  </th><th>empno  </th><th>birthdate  </th><th>salary  </th><th>deptname  </th><th>submit</th></tr>
+<tr>
+
+<td>
+<select name="formGender">
+  <option value="male">male</option>
+  <option value="female">female</option>
+</select>
+</td>
+
+<td>
+<select name="empno">
+  <option value="ASC">ASC</option>
+  <option value="DESC">DESC</option>
+</select>
+</td>
+
+<td>
+<select name="birthdate">
+<option value="ASC">ASC</option>
+<option value="DESC">DESC</option>
+</select>
+</td>
+<td>
+<select name="SALARY">
+<option value="ASC">ascending</option>
+<option value="DESC">decsending</option>
+</select>
+</td>
+<td>
+<select name="deptname">
+<option value="civil ">civil</option>
+<option value="marketing "> marketing</option>
+<option value="human resource ">human resourcel</option>
+<option value="designing "> designing</option>
+<option value="english "> english</option>
+</select>
+</td>
+<td>
+<input type="submit" value="go">
+</td>
+</tr>
+</table>
+</form>
+
+
 <?php
-			
-$sql7="select e.emp_no as emp1_no,e.first_name,e.last_name,e.hire_date,e.gender,e.birth_date,de.from_date,de.to_date,s.salary,d.dept_name,d.dept_no,t.title
-		                from employees e join   dept_emp de 
-                                on e.emp_no=de.emp_no 
-				join departments d on 
-                                de.dept_no=d.dept_no 
-				join salarees s on
-				e.emp_no=s.emp_no
-                                join titles t on 
-                                e.emp_no=t.emp_no";
-                    $result = mysqli_query($con, $sql7);
-                    
-		?>
+$abc="select e.emp_no as emp1_no,e.first_name,e.last_name,e.hire_date,e.gender,e.birth_date,de.from_date,de.to_date,s.salary,d.dept_name,d.dept_no,t.title
+				        from employees e join   dept_emp de 
+		                        on e.emp_no=de.emp_no 
+					join departments d on 
+		                        de.dept_no=d.dept_no 
+					join salarees s on
+					e.emp_no=s.emp_no
+		                        join titles t on 
+		                        e.emp_no=t.emp_no";
+		
+$empno=$_POST['empno'];
+$birthdate=$_POST['birthdate'];
+$formGender=$_POST['formGender'];
+$SALARY=$_POST['SALARY'];
+$deptname=$_POST['deptname'];
+$a="where e.gender='$formGender' ";
+$b="order by e.emp_no $empno";
+$c="order by e.birth_date $birthdate";
+$d="order by s.salary $SALARY";
+$e="where d.dept_name='$deptname'";
+$f=" ";
+
+
+
+//$pqr=(isset($formGender)?$a:$f).(isset($empno)?$b:$f).(isset($birthdate)?$c:$f).(isset($SALARY)?$d:$f).(isset($deptname)?$e:$f);
+
+$pqr=(isset($formGender)?$a:(isset($empno)?$b:$f));
+//$pqr=(isset($formGender)?$a:$f);
+
+
+echo $pqr;
+//echo "ternary";
+
+$sql="$abc"." $pqr";
+echo "$sql";
+$result=mysqli_query($con,$sql);
+//echo "hi";
+?>
+ 
+
 			<table border="4" bordercolor="pink">   
                               
-				    <?php      echo "<tr>";
-                                               echo "<th>emp_number</th>"; 
+				   <?php      
+                                                echo "<tr>";
+                                                echo "<th>emp_number</th>"; 
 						echo"<th>first_name</th>";
 
 						echo "<th>last_name</th>";
