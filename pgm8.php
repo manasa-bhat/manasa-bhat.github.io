@@ -1,5 +1,5 @@
 <html>
-<body>
+
 <head>
 <style type="text/css">
  .topcorner{
@@ -9,10 +9,10 @@
 </style>
 
 </head>
-
+<body>
 <h1> a small example page to insert some data into the MYSQL USING PHP</h1>
 <div style="float:left">
-	<form action ="pgm8.php" method="post">
+	<form action ="ternary.php" method="post">
 		<table>
 			<tr><td>emp_no:</td><td><input type="text" name="emp_no"/><br><br></td></tr>
 			<tr><td>dept_no:</td><td><input type="text" name="dept_no"/><br><br></td></tr>
@@ -185,7 +185,7 @@ echo " record added";
 
 
 <div class="topcorner">
-<form action="pgm8.php" method="POST">
+<form action="ternary.php" method="POST">
 <table border="4" bordercolor="pink">   
 <tr><th>formGender  </th><th>empno  </th><th>birthdate  </th><th>salary  </th><th>deptname  </th><th>submit</th></tr>
 <tr>
@@ -218,11 +218,11 @@ echo " record added";
 </td>
 <td>
 <select name="deptname">
-<option value="civil ">civil</option>
-<option value="marketing "> marketing</option>
-<option value="human resource ">human resourcel</option>
-<option value="designing "> designing</option>
-<option value="english "> english</option>
+<option value="civil">civil</option>
+<option value="marketing"> marketing</option>
+<option value="human resource">human resourcel</option>
+<option value="designing"> designing</option>
+<option value="english"> english</option>
 </select>
 </td>
 <td>
@@ -243,34 +243,36 @@ $abc="select e.emp_no as emp1_no,e.first_name,e.last_name,e.hire_date,e.gender,e
 					e.emp_no=s.emp_no
 		                        join titles t on 
 		                        e.emp_no=t.emp_no";
-		
-$empno=$_POST['empno'];
+//echo $abc;		
+//$empno=$_POST['empno'];
 $birthdate=$_POST['birthdate'];
 $formGender=$_POST['formGender'];
 $SALARY=$_POST['SALARY'];
 $deptname=$_POST['deptname'];
-$a="where e.gender='$formGender' ";
-$b="order by e.emp_no $empno";
-$c="order by e.birth_date $birthdate";
-$d="order by s.salary $SALARY";
-$e="where d.dept_name='$deptname'";
+$a="e.gender='$formGender' ";
+//$b=" e.emp_no $empno ";
+$c=" e.birth_date $birthdate ";
+$d=" s.salary $SALARY ";
+$e=" d.dept_name ='$deptname' ";
 $f=" ";
 
+//$query="order by "(isset($birthdate)?$c:$f) ; 
+//echo $query;
 
+//$pqr=(isset($formGender)?$a:$f) .(isset($empno)?$b:$f);/* . (isset($birthdate)?$c:$f).(isset($SALARY)?$d:$f) . (isset($deptname)?$e:$f);*/
 
-//$pqr=(isset($formGender)?$a:$f).(isset($empno)?$b:$f).(isset($birthdate)?$c:$f).(isset($SALARY)?$d:$f).(isset($deptname)?$e:$f);
+$query="where " . (isset($formGender)?$a:'') ." and".(isset($deptname)?$e:'') . "order by " . (isset($birthdate)?$c:'') .",". (isset($SALARY)?$d:'') .",".  (isset($formGender)?$a:'') .",".(isset($deptname)?$e:$f) ; 
+//echo $query;
 
-$pqr=(isset($formGender)?$a:(isset($empno)?$b:$f));
+//$pqr=(isset($formGender)?$a:(isset($empno)?$b:$f));(isset($SALARY)?$d:
 //$pqr=(isset($formGender)?$a:$f);
 
 
-echo $pqr;
-//echo "ternary";
-
-$sql="$abc"." $pqr";
-echo "$sql";
-$result=mysqli_query($con,$sql);
-//echo "hi";
+//echo $pqr ;
+$sql="$abc" . " $query" ;
+echo $sql;
+$result=mysqli_query($con,$sql) or die(mysqli_error($con));
+//print_r($result);
 ?>
  
 
@@ -308,7 +310,8 @@ $result=mysqli_query($con,$sql);
 				
 					
                                             while ($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) 
-						{
+						{//print_r($row);
+
                                                 echo "<tr>";
 					     
                                                 echo "<td>" .$row['emp1_no']. "</td>"; 
